@@ -31,8 +31,6 @@ def runquery(query):
 #Uses items/checkouts/ API endpoint to check item in again    
 def checkin_item(barcode,username,statgroup,sierra_api):
     url = "items/checkouts/" + barcode + "?username=" + username + "&statgroup=" + statgroup
-    #params = {"statgroup": statgroup}
-    #test with just sending statgroup parameter with URL
     request = sierra_api.request('DELETE',url)
     request.raise_for_status()
 
