@@ -70,12 +70,11 @@ def main():
     error_query = """\
             SELECT
               ip.barcode,
-              si.name AS username,
-              si.code AS checkin_stat_group_code,
+              u.name AS username,
+              u.statistic_group_code_num AS checkin_stat_group_code,
               i.checkout_statistic_group_code_num AS checkout_stat_group_code,
               so.name AS checkout_stat_group_name,
               v.field_content AS message,
-              --Converting timestamps to varchar because timestamps are not serializable and led to errors when adding log entries
               o.checkout_gmt::VARCHAR AS checkout_time,
               TO_TIMESTAMP(SPLIT_PART(v.field_content,': IN',1), 'Dy Mon DD YYYY  HH:MIAM')::VARCHAR AS checkin_time,
               SPLIT_PART(SPLIT_PART(v.field_content,'from ',2),' to',1) AS origin_loc,
@@ -96,8 +95,8 @@ def main():
                ON i.id = ip.item_record_id
              JOIN sierra_view.statistic_group_myuser so
                ON i.checkout_statistic_group_code_num = so.code
-             JOIN sierra_view.statistic_group_myuser si
-               ON SPLIT_PART(SPLIT_PART(v.field_content,'from ',2),' to',1) = si.name
+             JOIN sierra_view.iii_user u
+               ON SPLIT_PART(SPLIT_PART(v.field_content,'from ',2),' to',1) = u.name
              LEFT JOIN sierra_view.hold h
                ON i.id = h.record_id
 
